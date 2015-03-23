@@ -1,0 +1,27 @@
+---
+- name: Configure /etc/apt/sources.list.d/mysql.list
+  template: src=aptsources.mysql.list.j2 dest="/etc/apt/sources.list.d/mysql.list"
+  when: "'{{ install_type }}' == 'package' "
+
+- name: "Ensure dependencies (Debian)"
+  apt: name="{{ item }}" force=yes state=present update_cache=yes
+  with_items: dependencies
+
+- name: "Install server (Debian)"
+  apt: name="{{ item }}" force=yes state=present
+  when: "'{{ install_type }}' == 'package' "
+  with_items: mysql_packages
+  register: install_mysql
+
+- name: "Ensure /etc/mysql/my.cnf is removed"
+  file: path=/etc/mysql/my.cnf state=absent
+
+
+
+# TODO: Test if necessary on Debian systems
+# - name: "Ensure correct symbolic links"
+#   file: state=link src="{{ item.src }}" dest="{{ item.dest }}" owner="root" group="root"
+#   when: "'{{ mysql_flavor }}'=='percona'"
+#   with_items:
+#     - { src: '{{ libpath }}/libcrypto.so.0.9.8', dest: '{{ libpath }}/libcrypto.so.6' }
+#     - { src: '{{ libpath }}/libssl.so.0.9.8', dest: '{{ libpath }}/libssl.so.6' }

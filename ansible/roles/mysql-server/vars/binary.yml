@@ -1,0 +1,65 @@
+---
+
+nofile_soft_limits: 64000
+nofile_hard_limits: 64000
+
+install_type: package #TODO: support RPM/DEB
+
+mysql_user: mysql
+mysql_group: mysql
+
+mysql_flavor: percona
+
+mysql_install_dir: /opt/mysql_templates
+
+mysql_parent_dir: /opt/mysql
+
+mysql_symlink: /usr/local/mysql
+
+mysql_binary_src: "{{ mysql_symlink }}/bin"
+
+mysql_conf_file: /etc/my.cnf
+
+mysql_init_file: /etc/init.d/mysql
+
+mysql_uncompressed_dir: "Percona-Server-5.6.22-rel72.0-738.Linux.x86_64"
+
+mysql_tarball: "{{ mysql_uncompressed_dir }}.tar.gz"
+
+mysql_binary_url: "http://www.percona.com/downloads/Percona-Server-5.6/Percona-Server-5.6.22-72.0/binary/tarball/{{ mysql_tarball }}"
+
+mysql_binary_dest: "{{ mysql_install_dir }}/{{ mysql_tarball }} "
+
+
+# package install
+mysql_repository: http://www.percona.com/downloads/percona-release/redhat/0.1-3/percona-release-0.1-3.noarch.rpm
+mysql_packages:
+  - Percona-Server-server-56
+  - Percona-Server-devel-56
+# pxc_version: 5.6.20
+
+#pxc_source: http://www.percona.com/redir/downloads/Percona-XtraDB-Cluster-56/LATEST/binary/tarball/Percona-XtraDB-Cluster-5.6.20-rel68.0-25.7.886.Linux.x86_64.tar.gz
+
+# pxc_file: Percona-XtraDB-Cluster-5.6.20-rel68.0-25.7.886.Linux.x86_64
+
+mysql_conf:
+  basedir: "{{ mysql_symlink }}"
+  datadir: "{{ mysql_parent_dir }}/data"
+  tmpdir: "{{ mysql_parent_dir }}/tmp"
+  logdir: "{{ mysql_parent_dir }}/logs"
+  socket: "{{ mysql_symlink }}/mysql.sock"
+  pidfile: "{{ mysql_symlink }}/mysqld.pid"
+  innodb:
+    buffer_pool_size: "128M"
+
+mysql_dirs:
+  - "{{ mysql_conf['datadir'] }}"
+  - "{{ mysql_conf['logdir'] }}"
+  - "{{ mysql_conf['tmpdir'] }}"
+
+percona_deps:
+  - openssl098e
+  # - libaio1
+
+# For symlinks regarding ssl/crypto shared libs in percona installations
+libpath: /lib64/

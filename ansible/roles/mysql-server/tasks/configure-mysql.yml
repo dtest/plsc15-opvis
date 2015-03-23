@@ -1,0 +1,27 @@
+---
+- debug: msg="Configure MySQL"
+
+- name: Create group
+  group: state=present name="{{ mysql_group }}"
+
+- name: Create system user and group
+  user: state=present name="{{ mysql_user }}" group="{{ mysql_group }}" uid=4500
+
+- name: "Increasing soft file limits for user mysql"
+  lineinfile: dest=/etc/security/limits.conf regexp="{{ mysql_user }}\s+soft\s+nofile.*" line="{{ mysql_user }}        soft    nofile  {{ nofile_soft_limits }}"
+
+- name: "Increasing hard file limits for user mysql"
+  lineinfile: dest=/etc/security/limits.conf regexp="{{ mysql_user }}\s+hard\s+nofile.*" line="{{ mysql_user }}        hard    nofile  {{ nofile_hard_limits }}"
+
+- name: Ensure mysql directory structure
+  file: state=directory path="{{ item }}" owner="{{ mysql_user }}" group="{{ mysql_group }}"
+  with_items: mysql_dirs
+
+- name: "Ensure {{ mysql_init_file }}"
+  template: src=mysql.init.j2 dest="{{ mysql_init_file }}" owner="{{ mysql_user }}" group="{{ mysql_group }}" mode=0755
+
+- name: "Configure {{ mysql_conf_file }}"
+  template: src=my.cnf.j2 dest="/etc/my.cnf" owner="{{ mysql_user }}" group="{{ mysql_group }}" mode=0644
+  notify: restart mysql
+
+- include_vars: "{{ mysql_flavor }}/{{ ansible_os_family }}.yml"

@@ -1,0 +1,9 @@
+---
+ec2_cache_age: 300
+
+ec2vars_cluster_prefix: PLSC15
+ec2vars_region: us-west-1
+ec2vars_az: us-west-1a
+ec2vars_ami: ami-5c120b19
+ec2vars_keypair: plsc15
+ec2vars_instance_size: t2.micro

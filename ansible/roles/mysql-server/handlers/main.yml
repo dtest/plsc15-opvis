@@ -1,0 +1,6 @@
+---
+- name: restart mysql
+  service: name=mysql state="{{ item }}" sleep=5
+  with_items:
+    - stopped
+    - started

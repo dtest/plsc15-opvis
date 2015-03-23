@@ -1,0 +1,13 @@
+---
+# package install
+mysql_repository: http://www.percona.com/downloads/percona-release/redhat/0.1-3/percona-release-0.1-3.noarch.rpm
+mysql_packages:
+  - Percona-Server-server-56
+  - Percona-Server-devel-56
+
+dependencies:
+  - openssl098e
+
+
+# For symlinks regarding ssl/crypto shared libs in percona installations
+libpath: /lib64/

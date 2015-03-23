@@ -1,0 +1,267 @@
+[client]
+port            = 3306
+socket          = {{ mysql_conf['socket'] }}
+
+[mysqld_safe]
+#nice           = 0
+
+[mysqld]
+basedir         = {{ mysql_conf['basedir'] }}
+datadir         = {{ mysql_conf['datadir'] }}
+tmpdir          = {{ mysql_conf['tmpdir'] }}
+pid-file        = {{ mysql_conf['pidfile'] }}
+socket          = {{ mysql_conf['socket'] }}
+
+user            = {{ mysql_user }}
+port            = 3306
+
+max_allowed_packet      = 32M
+#max_connections  = 200
+#table_cache=4048
+#thread_cache_size   = 4096
+#thread_stack        = 256K
+#wait_timeout        = 120
+#performance_schema=0
+#read_only = 1
+
+character-set-server= utf8
+collation_server= utf8_bin
+
+
+log-error       = /var/log/mysql/error.log
+log_warnings    = 2
+
+default-storage-engine=innodb
+
+skip-external-locking
+skip-name-resolve
+
+
+#####################
+#Query cache
+#####################
+query_cache_type = 0
+query_cache_size = 0
+query_cache_limit = 0
+
+
+#####################
+#Per connection
+#####################
+join_buffer_size = 512K
+sort_buffer_size = 512K
+read_buffer_size = 512K
+read_rnd_buffer_size = 2M
+#binlog_cache_size       =256k
+#binlog_stmt_cache_size = 256K
+
+max_heap_table_size = 32M
+tmp_table_size = 32M
+
+
+#####################
+#MyISAM settings
+#####################
+key_buffer_size = 32M
+myisam_sort_buffer_size = 1024M
+myisam-recover          = BACKUP
+
+
+#####################
+#InnoDB settings
+#####################
+innodb_adaptive_flushing                        = 1 # plugin
+innodb_adaptive_hash_index                      = 1
+innodb_autoextend_increment                     = 100
+innodb_autoinc_lock_mode                        = 2 # to analyze
+innodb_buffer_pool_instances                    = 2
+innodb_buffer_pool_size                         = {{ mysql_conf['innodb']['buffer_pool_size'] }}
+innodb_change_buffering                         = all
+innodb_checksums                                = 1
+innodb_commit_concurrency                       = 0
+innodb_concurrency_tickets                      = 1000
+innodb_data_file_path                           = ibdata1:100M:autoextend
+innodb_data_home_dir                            = {{ mysql_conf['datadir'] }}
+innodb_doublewrite                              = 1
+innodb_fast_shutdown                            = 1
+innodb_file_format                              = Barracuda
+innodb_file_format_max                          = Barracuda
+innodb_file_format_check                        = 1
+innodb_file_per_table                           = 1
+innodb_flush_log_at_trx_commit                  = 1
+innodb_flush_method                             = O_DIRECT
+innodb_force_recovery                           = 0
+innodb_io_capacity                              = 300 # this should be also calculated on the base of real number of operation a disk could do per second, but also low enough to prevent heavy redo log flushing.
+innodb_large_prefix                             = 1
+innodb_lock_wait_timeout                        = 50
+innodb_log_buffer_size                          = 32M
+innodb_log_file_size                            = 512M
+innodb_log_files_in_group                       = 2
+innodb_log_group_home_dir                       = {{ mysql_conf['logdir'] }}
+innodb_max_dirty_pages_pct                      = 70
+innodb_max_purge_lag                            = 0
+innodb_old_blocks_pct                           = 35
+innodb_old_blocks_time                          = 1000
+innodb_open_files                               = 4096
+innodb_purge_batch_size                         = 2000
+innodb_purge_threads                            = 1
+innodb_read_ahead_threshold                     = 50 #56 default has to be calulatd
+innodb_read_io_threads                          = 48 # but it should increase a lot
+innodb_write_io_threads                         = 48
+innodb_replication_delay                        = 0
+innodb_rollback_on_timeout                      = 1
+innodb_rollback_segments                        = 128 #default
+innodb_spin_wait_delay                          = 4
+innodb_stats_method                             = nulls_equal
+innodb_stats_on_metadata                        = 1 # deprecated in 5.6
+innodb_stats_sample_pages                       = 6 # deprecated in 5.6
+innodb_support_xa                               = 1
+innodb_sync_spin_loops                          = 10
+innodb_table_locks                              = 1
+innodb_thread_concurrency                       = 0 #<CPU number *2 + disks
+innodb_thread_sleep_delay                       = 0
+innodb_use_native_aio                           = 1 #in emergency innodb cannot start try 0
+innodb_use_sys_malloc                           = 1
+
+
+#########################################
+#Additional Percona settings TO REVIEW!!!!
+#########################################
+
+#innodb_log_file_size                       # in percona also 5.5 can be > 4gb
+#innodb_adaptive_flushing                    = 1
+#innodb_adaptive_flushing_method             = estimate
+#innodb_adaptive_hash_index_partitions       = 8 #numb of bufferpools * 2
+#innodb_blocking_buffer_pool_restore         = 0
+#innodb_buffer_pool_restore_at_startup       = 0
+#innodb_checkpoint_age_target                = 0 # 60
+#innodb_corrupt_table_action                 = warn
+#innodb_dict_size_limit                      = 0
+#innodb_doublewrite_file                     = {{ mysql_conf['logdir'] }}/dbbuffer
+#innodb_fast_checksum                        = 0
+#innodb_flush_neighbor_pages                 = area
+#innodb_ibuf_accel_rate                      = 200
+#innodb_ibuf_active_contract                 = 1
+#innodb_ibuf_max_size                        = 500M
+#innodb_lazy_drop_table                      = 1
+#innodb_log_block_size                       = 512
+#innodb_page_size                            = 16384
+#innodb_read_ahead                           = linear
+#innodb_show_locks_held                      = 10
+#innodb_show_verbose_locks                   = 1
+#innodb_use_global_flush_log_at_trx_commit   = 0 # set at 1 limit the user that cannot change method
+#query_cache_strip_comments                  = 1
+#innodb_merge_sort_block_size                = 1048576
+#innodb_kill_idle_transaction                = 0
+
+#innodb_recovery_stats                       = 0
+
+
+#log_warnings_suppress                       = # ie errnum 1595
+
+#innodb_stats_auto_update                    = 1
+#innodb_stats_update_need_lock               = 1
+#innodb_use_sys_stats_table                  = 0
+
+
+
+
+#####################
+#Replication + binlog settings
+#####################
+binlog_format                                = ROW
+log-bin                                     = {{ mysql_conf['logdir'] }}/binlog
+log-slave-updates                           = 1
+
+#expire_logs_days                            = 8
+#max_binlog_size                             = 400M
+relay-log                                   = {{ mysql_conf['logdir'] }}/relay
+
+
+#####################
+# General Log DO NOT activate unless very good reason
+#####################
+general_log_file                             = {{ mysql_conf['logdir'] }}/general_query.log
+general_log                                  = off
+
+
+#####################
+#Slow Log
+#####################
+slow_query_log_file                          = /var/log/mysql/mysql-slow.log
+slow-query-log                               = 1
+slow_launch_time                             = 2
+long_query_time                              = 1
+log-queries-not-using-indexes                = 1
+min_examined_row_limit                       = 10000 # don't log queries not using indexes if examining less than this amount of rows
+# log_throttle_queries_not_using_indexes     = 0 # 5.6 introduced throttling if queries exceed number every 60 seconds
+
+{% if galera_options is defined %}
+#########################
+# GALERA
+#########################
+##
+## WSREP options
+##
+
+#wsrep_node_incoming_address=xxx
+#wsrep_notify_cmd=""
+#wsrep_sst_donor
+
+wsrep_auto_increment_control              = 1
+wsrep_causal_reads                        = 0
+wsrep_certify_nonPK                       = 1
+
+wsrep_cluster_address   = gcomm://{{ wsrep_cluster_address }}
+
+wsrep_cluster_name                        = "{{ mysql_conf['wsrep_cluster_name'] }}"
+wsrep_convert_LOCK_to_trx                 = 0
+wsrep_data_home_dir                       = {{ mysql_conf['datadir'] }}
+wsrep_dbug_option                         = 1
+wsrep_debug                               = 1
+wsrep_drupal_282555_workaround            = 0
+wsrep_forced_binlog_format                = ROW
+wsrep_log_conflicts                       = 1
+#wsrep_max_ws_rows                         = 131072
+#wsrep_max_ws_size                         = 2147483648
+#wsrep_mysql_replication_bundle            = 0  # experimental to test value 1 - 1000
+#wsrep_node_name                           = pchgny1
+# wsrep_notify_cmd
+wsrep_on                                  = ON
+wsrep_provider                            = /usr/local/mysql/lib/libgalera_smm.so
+wsrep_provider_options                    = "{{ galera_options['wsrep_provider_options'] }}"
+wsrep_recover                             = 0
+wsrep_replicate_myisam                    = 0
+wsrep_retry_autocommit                    = 3
+wsrep_slave_threads                       = 4
+wsrep_sst_method                          = xtrabackup-v2
+wsrep_sst_auth                            = {{ galera_options['sstuser']['username'] }}:{{ galera_options['sstuser']['password'] }}
+#wsrep_sst_donor                          = DO NOT specify leave it automatically keept
+wsrep_sst_donor_rejects_queries           = 0
+
+wsrep_sst_receive_address                 = AUTO
+#wsrep_start_position=00000000000000000000000000000000:1 #Used to define the start position when running This variable contains the UUID:seqno value.
+
+
+
+# Command to call when node status or cluster membership changes.
+# Will be passed all or some of the following options:
+# --status  - new status of this node
+# --uuid    - UUID of the cluster
+# --primary - whether the component is primary or not ("yes"/"no")
+# --members - comma-separated list of members
+# --index   - index of this node in the list
+#wsrep_notify_cmd=
+{% endif %}
+
+
+[mysqldump]
+quick
+quote-names
+max_allowed_packet      = 16M
+
+[mysql]
+prompt=(\\u@\\h) [\\d]>\\
+
+[isamchk]
+key_buffer              = 16M

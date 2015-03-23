@@ -1,0 +1,15 @@
+---
+# Setup ec2.py inventory
+- name: "Copy ec2.py file"
+  copy: src="ec2.py" dest="../ec2.py" mode=0755
+
+- name: "Template ec2.ini"
+  template: src="ec2.ini.j2" dest="../ec2.ini" mode=0600
+
+- name: "Run ec2.py"
+  command: ../ec2.py --list
+
+# TODO: setup environments
+- name: "Launch environment"
+  include: launch_environment.yml
+

@@ -1,0 +1,23 @@
+---
+
+- include: configure-mysql.yml
+  tags: always
+
+# Actually installs MySQL if install_type=='package'
+- name: "Install dependencies - Debian"
+  include: "dependencies-Debian.yml"
+  when: ansible_os_family=='Debian'
+  tags: setup
+
+- name: "Stop mysql if it was installed"
+  command: /etc/init.d/mysql.dpkg-dist stop
+  when: install_mysql|changed
+  tags: setup
+
+# TODO: Setup root user
+
+# TODO: Setup other users
+
+# TODO: Need to fix configuring replication due to mysql_replication module bug #155
+# - include: configure-replication.yml
+#   tags: replication

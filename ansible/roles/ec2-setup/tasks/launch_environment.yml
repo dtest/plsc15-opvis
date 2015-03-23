@@ -1,0 +1,113 @@
+---
+- name: "Set up VPC"
+  ec2_vpc:
+    state: present
+    region: "{{ ec2vars_region }}"
+    cidr_block: 10.1.0.0/16
+    resource_tags: { "Name":"{{ ec2vars_cluster_prefix }} VPC" }
+    subnets:
+      - cidr: 10.1.1.0/24
+        az: "{{ ec2vars_az }}"
+        resource_tags: { "Name":"{{ ec2vars_cluster_prefix }} Subnet", "Tier" : "MySQL" }
+
+    internet_gateway: True
+    route_tables:
+      - resource_tags: { "Name":"{{ ec2vars_cluster_prefix }} Route" }
+        subnets:
+          - 10.1.1.0/24
+        routes:
+          - dest: 0.0.0.0/0
+            gw: igw
+  register: vpc
+
+# - debug: var=vpc
+
+- name: Create EC2 Key
+  ec2_key:
+    name: "{{ ec2vars_keypair }}"
+    state: present
+    region: "{{ ec2vars_region }}"
+    wait: yes
+    wait_timeout: 300
+  register: keypair
+
+# - debug: var=keypair
+
+- name: Save generated keyfile
+  copy: content="{{ keypair.key.private_key }}" dest="~/.ssh/{{ ec2vars_keypair }}.pem" mode=0600
+  when: keypair.key.private_key is defined
+
+- name: Create MySQL security group
+  ec2_group:
+    name: "{{ ec2vars_cluster_prefix }} Security"
+    description: "{{ ec2vars_cluster_prefix }} Security group"
+    state: present
+    validate_certs: yes
+    vpc_id: "{{ vpc.vpc_id }}"
+    region: "{{ ec2vars_region }}"
+    rules:
+      - proto: tcp
+        from_port: 22
+        to_port: 22
+        cidr_ip: 0.0.0.0/0
+      - proto: tcp
+        from_port: 3306
+        to_port: 3306
+        cidr_ip: 10.1.1.0/24
+  register: security_group
+
+# - debug: var=security_group
+
+- name: "Create instance: MySQL Master"
+  ec2:
+    region: "{{ ec2vars_region }}"
+    vpc_subnet_id: "{{ vpc.subnets[0].id }}"
+    image: "{{ ec2vars_ami }}"
+    instance_type: "{{ ec2vars_instance_size }}"
+    group: [ "{{ ec2vars_cluster_prefix }} Security" ] # list of security group id's
+    key_name: "{{ ec2vars_keypair }}"
+    wait: yes
+    wait_timeout: 300
+    count_tag:
+      Name: mysql-master
+    exact_count: 1
+    monitoring: no
+    assign_public_ip: yes
+    # volumes:
+    #   - device_name: /dev/xvdf
+    #     volume_size: 10
+    #     device_type: gp2
+    instance_tags:
+      Name: mysql-master
+      Role: MySQL
+      MySQLRole: Master
+      VPC: "{{ ec2vars_cluster_prefix }}"
+
+- name: "Create instance: MySQL Slave"
+  ec2:
+    region: "{{ ec2vars_region }}"
+    vpc_subnet_id: "{{ vpc.subnets[0].id }}"
+    image: "{{ ec2vars_ami }}"
+    instance_type: "{{ ec2vars_instance_size }}"
+    group: [ "{{ ec2vars_cluster_prefix }} Security" ] # list of security group id's
+    key_name: "{{ ec2vars_keypair }}"
+    wait: yes
+    wait_timeout: 300
+    count_tag:
+      Name: mysql-slave
+    exact_count: 1
+    monitoring: no
+    assign_public_ip: yes
+    # volumes:
+    #   - device_name: /dev/xvdf
+    #     volume_size: 10
+    #     device_type: gp2
+    instance_tags:
+      Name: mysql-slave
+      Role: MySQL
+      MySQLRole: Slave
+      VPC: "{{ ec2vars_cluster_prefix }}"
+
+- name: "Refresh ec2 cache"
+  command: ../ec2.py --refresh-cache
+
