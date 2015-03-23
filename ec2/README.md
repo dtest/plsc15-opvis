@@ -43,7 +43,7 @@ $ brew install ansible
 
 #### Using pip
 ```bash
-$ pip install ansible
+$ sudo pip install ansible
 ```
 
 # Setup the instances
