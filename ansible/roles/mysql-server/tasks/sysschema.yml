@@ -1,0 +1,9 @@
+---
+- name: Fetch sys_schema repository
+  git: >
+    repo={{ sys_schema_repo }}
+    dest=/opt/sys_schema
+    update=no
+
+- name: "Install sys_schema"
+  command: mysql -uroot -p{{ mysql_root_password }} -e 'SOURCE sys_56.sql' chdir=/opt/sys_schema creates="{{ mysql_conf['datadir'] }}/sys"

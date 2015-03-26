@@ -6,3 +6,4 @@ mysql_packages:
 dependencies:
   - python-mysqldb
   - libmysqlclient-dev
+  - git

@@ -1,5 +1,7 @@
 ---
 
+- debug: var={{ mysql_root_password }}
+
 - include: configure-mysql.yml
   tags: always
 
@@ -14,9 +16,22 @@
   when: install_mysql|changed
   tags: setup
 
-# TODO: Setup root user
+- name: Set root user password
+  mysql_user: name="root" host="{{ item }}" password="{{ mysql_root_password }}" login_unix_socket="{{ mysql_conf['socket'] }}" check_implicit_admin=yes login_user="root" login_password="{{ mysql_root_password }}"
+  with_items:
+    - localhost
+    - "127.0.0.1"
+  tags: always
 
-# TODO: Setup other users
+- name: Setup mysql users
+  mysql_user: name="{{ item.user }}" host="{{ item.host }}" password="{{ item.password }}" priv={{ item.grant_pattern }} login_unix_socket="{{ mysql_conf['socket'] }}" check_implicit_admin=yes login_user="root" login_password="{{ mysql_root_password }}"
+  with_items: mysql_users
+  tags: always
+
+# TODO: install sys schema
+- name: Install sys_schema
+  include: sysschema.yml
+  when: "'{{ use_sys_schema }}' == 'True'"
 
 # TODO: Need to fix configuring replication due to mysql_replication module bug #155
 # - include: configure-replication.yml

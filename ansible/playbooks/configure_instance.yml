@@ -1,6 +1,10 @@
 ---
 - hosts: "{{ targets }}"
   sudo: yes
+  pre_tasks:
+    - include_vars: "{{ inventory_dir }}/group_vars/all.yml"
+      when: mysql_root_password is not defined
+      tags: always
   roles:
     - { role: mysql-server, tags: mysql }
     - { role: sensu-client, tags: sensu }

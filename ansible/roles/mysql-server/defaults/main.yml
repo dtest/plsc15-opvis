@@ -30,3 +30,6 @@ mysql_conf:
   pidfile: "/var/lib/mysql/mysqld.pid"
   innodb:
     buffer_pool_size: "128M"
+
+use_sys_schema: True
+sys_schema_repo: https://github.com/MarkLeith/mysql-sys.git
