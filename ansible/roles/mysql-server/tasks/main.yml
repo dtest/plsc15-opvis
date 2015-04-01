@@ -28,11 +28,6 @@
   with_items: mysql_users
   tags: always
 
-# TODO: install sys schema
-- name: Install sys_schema
-  include: sysschema.yml
-  when: "'{{ use_sys_schema }}' == 'True'"
-
 # TODO: Need to fix configuring replication due to mysql_replication module bug #155
 # - include: configure-replication.yml
 #   tags: replication
