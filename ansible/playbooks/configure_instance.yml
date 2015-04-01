@@ -8,4 +8,4 @@
   roles:
     - { role: mysql-server, tags: mysql }
     - { role: sensu-client, tags: sensu }
-    # - { role: logstash-agent, tags: logstash }
+    - { role: logstash-agent, tags: logstash }

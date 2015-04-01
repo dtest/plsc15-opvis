@@ -11,10 +11,10 @@
   when: ansible_os_family=='Debian'
   tags: setup
 
-- name: "Stop mysql if it was installed"
-  command: /etc/init.d/mysql.dpkg-dist stop
-  when: install_mysql|changed
-  tags: setup
+# - name: "Stop mysql if it was installed"
+#   command: /etc/init.d/mysql.dpkg-dist stop
+#   when: install_mysql|changed
+#   tags: setup
 
 - name: Set root user password
   mysql_user: name="root" host="{{ item }}" password="{{ mysql_root_password }}" login_unix_socket="{{ mysql_conf['socket'] }}" check_implicit_admin=yes login_user="root" login_password="{{ mysql_root_password }}"

@@ -10,6 +10,9 @@
 - name: Add logstash to correct groups
   user: name=logstash groups="{{ logstash['groups'] }}"
 
+- name: Configure logstash initfile for MySQL connectivity
+  template: src=my.cnf_logstash.j2 dest=/opt/logstash/.my.cnf owner=logstash group=logstash mode=0600
+
 # TODO: determine if we need /var/lib/monit
 - name: "Ensure /etc/logstash/conf.d directory"
   file: state=directory dest=/etc/logstash/conf.d owner="{{ logstash_user }}" group="{{ logstash_user }}" mode=0755

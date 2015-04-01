@@ -13,10 +13,8 @@
   with_items: mysql_packages
   register: install_mysql
 
-- name: "Ensure /etc/mysql/my.cnf is removed"
-  file: path=/etc/mysql/my.cnf state=absent
-
-
+# - name: "Ensure /etc/mysql/my.cnf is removed"
+#   file: path=/etc/mysql/my.cnf state=absent
 
 # TODO: Test if necessary on Debian systems
 # - name: "Ensure correct symbolic links"

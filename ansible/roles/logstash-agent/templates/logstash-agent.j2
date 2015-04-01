@@ -1,13 +1,26 @@
-{% if logstash['file_inputs']|length>0 %}
+
 input {
-{% for input in logstash['file_inputs'] %}
+{% if logstash['inputs']['file']|length>0 %}
+{% for input in logstash['inputs']['file'] %}
     file {
         type => "{{ input.type }}"
         path => "{{ input.path }}"
+        codec => "{{ input.codec | default('plain') }}"
     }
 {% endfor %}
-}
 {% endif %}
+
+{% if logstash['inputs']['exec']|length>0 %}
+{% for input in logstash['inputs']['exec'] %}
+    exec {
+        type => "{{ input.type }}"
+        command => "{{ input.command }}"
+        interval => "{{ input.interval }}"
+        codec => "{{ input.codec | default('plain') }}"
+    }
+{% endfor %}
+{% endif %}
+}
 
 filter {
     mutate {

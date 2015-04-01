@@ -17,7 +17,7 @@
 
 - name: Remove client init.d scripts if using upstart
   file: state=absent dest=/etc/init.d/sensu-client
-  when: "{{ using_upstart }} == True"
+  when: "'{{ using_upstart }}' == 'True'"
 
 - name: Install upstart init scripts if using upstart
   template: >
@@ -31,7 +31,7 @@
   - client
   # - dashboard
   # - server
-  when: "{{ using_upstart }} == True"
+  when: "'{{ using_upstart }}' == 'True'"
 
 - name: Ensure sensu client service is enabled
   service: name=sensu-client enabled=yes
@@ -66,6 +66,7 @@
     mode=0440
 
 # TODO: Specify version
+# - file: path="{{ opviz_dir }}" state=absent
 - name: Fetch opviz repository
   git: >
     repo={{ opviz_repo }}

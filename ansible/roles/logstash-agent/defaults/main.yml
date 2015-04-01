@@ -1,6 +1,6 @@
 ---
 
-using_upstart: yes
+using_upstart: true
 
 logstash_version: 1.4
 
@@ -12,7 +12,9 @@ logstash:
   rabbitmq:
     host: localhost
     password: ""
-  file_inputs: {}
+  inputs:
+    file: {}
+    exec: {}
   filters: []
 
 rabbitmq_defaults:

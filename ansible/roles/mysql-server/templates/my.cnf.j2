@@ -21,7 +21,6 @@ max_allowed_packet      = 32M
 #thread_cache_size   = 4096
 #thread_stack        = 256K
 #wait_timeout        = 120
-#performance_schema=0
 #read_only = 1
 
 character-set-server= utf8
@@ -164,8 +163,6 @@ innodb_use_sys_malloc                           = 1
 #innodb_use_sys_stats_table                  = 0
 
 
-
-
 #####################
 #Replication + binlog settings
 #####################
@@ -195,6 +192,18 @@ long_query_time                              = 1
 log-queries-not-using-indexes                = 1
 min_examined_row_limit                       = 10000 # don't log queries not using indexes if examining less than this amount of rows
 # log_throttle_queries_not_using_indexes     = 0 # 5.6 introduced throttling if queries exceed number every 60 seconds
+
+{% if performance_schema_options is defined %}
+####################
+# Performance schema
+####################
+performance_schema=ON
+{% if performance_schema_options['consumers']|length>0 %}
+{% for consumer in performance_schema_options['consumers'] %}
+performance_schema_consumer_{{ consumer }}=ON
+{% endfor %}
+{% endif %}
+{% endif %}
 
 {% if galera_options is defined %}
 #########################

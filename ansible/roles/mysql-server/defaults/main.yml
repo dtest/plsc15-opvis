@@ -16,6 +16,7 @@ mysql_init_file: /etc/init.d/mysql
 # Ensure directory structure
 mysql_dirs:
   - /var/log/mysql
+  - /etc/mysql
   - "{{ mysql_conf['datadir'] }}"
   - "{{ mysql_conf['logdir'] }}"
   - "{{ mysql_conf['tmpdir'] }}"
@@ -33,3 +34,9 @@ mysql_conf:
 
 use_sys_schema: True
 sys_schema_repo: https://github.com/MarkLeith/mysql-sys.git
+
+performance_schema_options:
+  consumers:
+    - events_statements_current
+    - events_statements_history
+    - events_statements_history_long
