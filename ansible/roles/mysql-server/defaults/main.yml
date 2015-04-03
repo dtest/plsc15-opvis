@@ -29,6 +29,7 @@ mysql_conf:
   logdir: "/var/lib/mysql"
   socket: "/var/lib/mysql/mysql.sock"
   pidfile: "/var/lib/mysql/mysqld.pid"
+  expire_logs_days: 1
   innodb:
     buffer_pool_size: "128M"
 

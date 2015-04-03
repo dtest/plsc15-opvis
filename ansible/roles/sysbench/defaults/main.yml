@@ -1,0 +1,6 @@
+---
+oltp_table_size: 1000000
+
+sbench_mysql:
+  user: sbench
+  password: sbtest15
