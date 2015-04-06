@@ -1,0 +1,29 @@
+---
+- name: "Branch tpcc from launchpad"
+  command: bzr branch lp:~percona-dev/perconatools/tpcc-mysql chdir=/opt creates=/opt/tpcc-mysql
+
+- name: "Make binaries"
+  command: make all chdir=/opt/tpcc-mysql/src creates=/opt/tpcc-mysql/tpcc_load
+
+- name: "Create tpcc database"
+  mysql_db: name={{ tpcc.mysql.database }} state=present login_unix_socket="{{ mysql_conf['socket'] }}" login_user="root" login_password="{{ mysql_root_password }}"
+
+- name: "Create tpcc user"
+  mysql_user: name={{ tpcc.mysql.user }} host="{{ tpcc.mysql.host }}" password="{{ tpcc.mysql.password }}" priv={{ tpcc.mysql.grant_pattern }} state=present login_unix_socket="{{ mysql_conf['socket'] }}" login_user="root" login_password="{{ mysql_root_password }}"
+
+- name: "Copy install_tpcc.sql file"
+  copy: content="source create_table.sql\nsource add_fkey_idx.sql" dest=/opt/tpcc-mysql/install-tpcc.sql mode=0644
+
+- name: "Creating tpcc tables"
+  command: mysql -u "{{ tpcc.mysql.user }}" -p"{{ tpcc.mysql.password }}" "{{ tpcc.mysql.database }}" -e 'source install-tpcc.sql' chdir=/opt/tpcc-mysql creates="{{ mysql_conf['datadir'] }}/{{ tpcc.mysql.database }}/warehouse.frm"
+
+# - name: "Remove prior load log(DEBUG)"
+#   file: path=/opt/tpcc-mysql/load.log state=absent
+
+- name: "Loading warehouses tables"
+  shell: ./tpcc_load {{ tpcc.mysql.host }} {{ tpcc.mysql.database }} {{ tpcc.mysql.user }} "{{ tpcc.mysql.password | quote }}" {{ tpcc.num_warehouses }} > load.log  chdir=/opt/tpcc-mysql creates="/opt/tpcc-mysql/load.log"
+  async: 45
+  poll: 5
+
+- name: "Add tpcc cron"
+  cron: name="tpcc cron" minute="*/15" job="/opt/tpcc-mysql/tpcc_start -h{{ tpcc.mysql.host }} -d{{ tpcc.mysql.database }} -u{{ tpcc.mysql.user }} -p"{{ tpcc.mysql.password | quote }}" -w{{ tpcc.num_warehouses }} -c{{ tpcc.concurrent_threads }} -r{{ tpcc.warmup }} -l{{ tpcc.run_time }} > ~/tpcc-output-ps-55-bpool-256.log"

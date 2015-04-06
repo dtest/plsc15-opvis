@@ -27,7 +27,3 @@
   mysql_user: name="{{ item.user }}" host="{{ item.host }}" password="{{ item.password }}" priv={{ item.grant_pattern }} login_unix_socket="{{ mysql_conf['socket'] }}" check_implicit_admin=yes login_user="root" login_password="{{ mysql_root_password }}"
   with_items: mysql_users
   tags: always
-
-# TODO: Need to fix configuring replication due to mysql_replication module bug #155
-# - include: configure-replication.yml
-#   tags: replication

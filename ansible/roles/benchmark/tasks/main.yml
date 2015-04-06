@@ -1,0 +1,20 @@
+---
+- name: "Install benchmark tools - Debian"
+  include: "install-Debian.yml"
+  when: ansible_os_family=='Debian'
+
+- name: "Prepare sysbench"
+  include: sysbench.yml
+  when: '"sysbench" in benchmark_tools'
+
+- name: "Remove sysbench cron if not using"
+  cron: name="oltp cron" state=absent
+  when: '"sysbench" not in benchmark_tools'
+
+- name: "Prepare tpcc"
+  include: tpcc.yml
+  when: '"tpcc" in benchmark_tools'
+
+# - name: "Remove tpcc cron if not using"
+#   cron: name="tpcc cron" state=absent
+#   when: '"tpcc" not in benchmark_tools'

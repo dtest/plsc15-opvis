@@ -32,6 +32,7 @@ mysql_conf:
   expire_logs_days: 1
   innodb:
     buffer_pool_size: "128M"
+    log_file_size: "32M"
 
 performance_schema_options:
   consumers:

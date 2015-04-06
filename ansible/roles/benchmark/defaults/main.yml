@@ -1,0 +1,26 @@
+---
+
+# Support for sysbench, tpcc (WIP)
+benchmark_tools: []
+
+sysbench:
+  oltp_table_size: 1000000
+  mysql:
+    user: sbench
+    host: localhost
+    password: sbtest15
+    database: sbtest
+    grant_pattern: 'sbtest.*:ALL'
+
+tpcc:
+  dependencies: ['bzr','zlib1g-dev']
+  num_warehouses: 2
+  concurrent_threads: 8
+  run_time: 120
+  warmup: 60
+  mysql:
+    user: tpcc
+    host: "127.0.0.1"
+    password: tpccplsc15
+    database: tpcc1000
+    grant_pattern: 'tpcc1000.*:ALL'

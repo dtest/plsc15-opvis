@@ -1,3 +1,0 @@
----
-- name: "Install sysbench (Debian)"
-  apt: name="sysbench" state=present update_cache=yes

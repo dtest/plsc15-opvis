@@ -1,0 +1,9 @@
+---
+- name: "Install sysbench (Debian)"
+  apt: name="sysbench" state=present update_cache=no
+  when: '"sysbench" in benchmark_tools'
+
+- name: "Install tpcc dependencies (Debian)"
+  apt: name={{ item }} state=present update_cache=no
+  with_items: tpcc.dependencies
+  when: '"tpcc" in benchmark_tools'

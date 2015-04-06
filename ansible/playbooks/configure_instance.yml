@@ -7,6 +7,6 @@
       tags: always
   roles:
     - { role: mysql-server, tags: mysql }
-    - { role: sysbench, tags: sysbench }
+    - { role: benchmark, tags: benchmark }
     - { role: sensu-client, tags: sensu }
     - { role: logstash-agent, tags: logstash }

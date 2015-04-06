@@ -77,8 +77,8 @@ innodb_buffer_pool_instances                    = 2
 innodb_buffer_pool_size                         = {{ mysql_conf['innodb']['buffer_pool_size'] }}
 innodb_change_buffering                         = all
 innodb_checksums                                = 1
-innodb_commit_concurrency                       = 0
-innodb_concurrency_tickets                      = 1000
+#innodb_commit_concurrency                       = 0
+#innodb_concurrency_tickets                      = 1000
 innodb_data_file_path                           = ibdata1:100M:autoextend
 innodb_data_home_dir                            = {{ mysql_conf['datadir'] }}
 innodb_doublewrite                              = 1
@@ -94,7 +94,7 @@ innodb_io_capacity                              = 300 # this should be also calc
 innodb_large_prefix                             = 1
 innodb_lock_wait_timeout                        = 50
 innodb_log_buffer_size                          = 32M
-innodb_log_file_size                            = 512M
+innodb_log_file_size                            = {{ mysql_conf['innodb']['log_file_size'] }}
 innodb_log_files_in_group                       = 2
 innodb_log_group_home_dir                       = {{ mysql_conf['logdir'] }}
 innodb_max_dirty_pages_pct                      = 70
@@ -167,12 +167,12 @@ innodb_use_sys_malloc                           = 1
 #Replication + binlog settings
 #####################
 binlog_format                                = ROW
-log-bin                                     = {{ mysql_conf['logdir'] }}/binlog
-log-slave-updates                           = 1
+#log-bin                                     = {{ mysql_conf['logdir'] }}/binlog
+#log-slave-updates                           = 1
 
-expire_logs_days                            = {{ mysql_conf['expire_logs_days'] }}
+#expire_logs_days                            = {{ mysql_conf['expire_logs_days'] }}
 #max_binlog_size                             = 400M
-relay-log                                   = {{ mysql_conf['logdir'] }}/relay
+#relay-log                                   = {{ mysql_conf['logdir'] }}/relay
 
 
 #####################
