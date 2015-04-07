@@ -58,7 +58,7 @@
 
 # - debug: var=security_group
 
-- name: "Create instance: MySQL Master"
+- name: "Create MySQL instances"
   ec2:
     region: "{{ ec2vars_region }}"
     vpc_subnet_id: "{{ vpc.subnets[0].id }}"
@@ -69,44 +69,40 @@
     wait: yes
     wait_timeout: 300
     count_tag:
-      Name: mysql-master
-    exact_count: 1
+      Name: plsc15-mysql
+    exact_count: 10
     monitoring: no
     assign_public_ip: yes
-    # volumes:
-    #   - device_name: /dev/xvdf
-    #     volume_size: 10
-    #     device_type: gp2
     instance_tags:
       Name: mysql-master
       Role: MySQL
       MySQLRole: Master
       VPC: "{{ ec2vars_cluster_prefix }}"
 
-- name: "Create instance: MySQL Slave"
-  ec2:
-    region: "{{ ec2vars_region }}"
-    vpc_subnet_id: "{{ vpc.subnets[0].id }}"
-    image: "{{ ec2vars_ami }}"
-    instance_type: "{{ ec2vars_instance_size }}"
-    group: [ "{{ ec2vars_cluster_prefix }} Security" ] # list of security group id's
-    key_name: "{{ ec2vars_keypair }}"
-    wait: yes
-    wait_timeout: 300
-    count_tag:
-      Name: mysql-slave
-    exact_count: 1
-    monitoring: no
-    assign_public_ip: yes
-    # volumes:
-    #   - device_name: /dev/xvdf
-    #     volume_size: 10
-    #     device_type: gp2
-    instance_tags:
-      Name: mysql-slave
-      Role: MySQL
-      MySQLRole: Slave
-      VPC: "{{ ec2vars_cluster_prefix }}"
+# - name: "Create instance: MySQL Slave"
+#   ec2:
+#     region: "{{ ec2vars_region }}"
+#     vpc_subnet_id: "{{ vpc.subnets[0].id }}"
+#     image: "{{ ec2vars_ami }}"
+#     instance_type: "{{ ec2vars_instance_size }}"
+#     group: [ "{{ ec2vars_cluster_prefix }} Security" ] # list of security group id's
+#     key_name: "{{ ec2vars_keypair }}"
+#     wait: yes
+#     wait_timeout: 300
+#     count_tag:
+#       Name: mysql-slave
+#     exact_count: 1
+#     monitoring: no
+#     assign_public_ip: yes
+#     # volumes:
+#     #   - device_name: /dev/xvdf
+#     #     volume_size: 10
+#     #     device_type: gp2
+#     instance_tags:
+#       Name: mysql-slave
+#       Role: MySQL
+#       MySQLRole: Slave
+#       VPC: "{{ ec2vars_cluster_prefix }}"
 
 - name: "Refresh ec2 cache"
   command: ../ec2.py --refresh-cache

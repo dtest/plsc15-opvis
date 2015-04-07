@@ -26,6 +26,20 @@ filter {
     mutate {
         replace => ["host", "{{ inventory_hostname }}"]
     }
+
+    if [type] == "mysql_error"
+        multiline {
+            type => 'mysql_error'
+            what => previous
+            pattern => '^\s'
+        }
+
+        grok {
+            type => 'mysql_error'
+            patterns_dir => '{{ logstash_plugins_dir }}'
+            pattern => '%{MYSQL_ERROR_LOG}'
+        }
+    }
 }
 
 output {

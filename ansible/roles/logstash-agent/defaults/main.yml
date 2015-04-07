@@ -6,6 +6,8 @@ logstash_version: 1.4
 
 logstash_user: logstash
 
+logstash_plugins_dir: /opt/opviz/chef-cookbooks/opviz-client/files/default/logstash_patterns
+
 # Default ansible behavior is to replace hashes, not merge. http://docs.ansible.com/intro_configuration.html#hash-behaviour
 # So we will assume defaults are overwritten by group vars or playbook vars
 logstash:

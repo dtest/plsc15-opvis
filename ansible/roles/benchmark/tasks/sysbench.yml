@@ -3,10 +3,10 @@
   mysql_db: name=sbtest state=present login_unix_socket="{{ mysql_conf['socket'] }}" login_user="root" login_password="{{ mysql_root_password }}"
 
 - name: "Create sbench user"
-  mysql_user: name={{ sbtest.mysql.user }} host="{{ sbtest.mysql.host }}" password="{{ sbtest.mysql.password }}" priv={{ sbtest.mysql.grant_pattern }} state=present login_unix_socket="{{ mysql_conf['socket'] }}" login_user="root" login_password="{{ mysql_root_password }}"
+  mysql_user: name={{ sysbench.mysql.user }} host="{{ sysbench.mysql.host }}" password="{{ sysbench.mysql.password }}" priv={{ sysbench.mysql.grant_pattern }} state=present login_unix_socket="{{ mysql_conf['socket'] }}" login_user="root" login_password="{{ mysql_root_password }}"
 
 - name: "Install test database"
-  command: sysbench --test=oltp --oltp-table-size={{ oltp_table_size }} --mysql-user={{ sysbench.mysql.user] }} --mysql-password={{ sysbench.mysql.password }} --mysql-socket={{ mysql_conf['socket'] }} prepare creates="{{ mysql_conf['datadir'] }}/sbtest/sbtest.frm"
+  command: sysbench --test=oltp --oltp-table-size={{ sysbench.oltp_table_size }} --mysql-user={{ sysbench.mysql.user }} --mysql-password={{ sysbench.mysql.password }} --mysql-socket={{ mysql_conf['socket'] }} prepare creates="{{ mysql_conf['datadir'] }}/sbtest/sbtest.frm"
 
 - name: "Add sysbench cron"
-  cron: name="sysbench cron" minute="*/15" job="sysbench --test=oltp --oltp-table-size={{ oltp_table_size }} --mysql-user={{ sbench_mysql['user'] }} --mysql-password={{ sbench_mysql['password'] }} --mysql-socket={{ mysql_conf['socket'] }} --max-time=120 --max-requests=0 --num-threads=8 run >>/root/sysbench.log 2>>/root/sysbench.err"
+  cron: name="sysbench cron" minute="*/15" job="sysbench --test=oltp --oltp-table-size={{ sysbench.oltp_table_size }} --mysql-user={{ sysbench.mysql.user }} --mysql-password={{ sysbench.mysql.password }} --mysql-socket={{ mysql_conf['socket'] }} --max-time=120 --max-requests=0 --num-threads=8 run >>/root/sysbench.log 2>>/root/sysbench.err"

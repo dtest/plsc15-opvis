@@ -15,6 +15,6 @@
   include: tpcc.yml
   when: '"tpcc" in benchmark_tools'
 
-# - name: "Remove tpcc cron if not using"
-#   cron: name="tpcc cron" state=absent
-#   when: '"tpcc" not in benchmark_tools'
+- name: "Remove tpcc cron if not using"
+  cron: name="tpcc cron" state=absent
+  when: '"tpcc" not in benchmark_tools'
