@@ -33,6 +33,10 @@ mysql_conf:
   innodb:
     buffer_pool_size: "128M"
     log_file_size: "32M"
+  slow_query:
+    enabled: 1
+    long_query_time: 1
+    not_using_indexes: 1
 
 performance_schema_options:
   consumers:

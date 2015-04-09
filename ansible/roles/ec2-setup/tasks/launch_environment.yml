@@ -74,9 +74,8 @@
     monitoring: no
     assign_public_ip: yes
     instance_tags:
-      Name: mysql-master
+      Name: plsc15-mysql
       Role: MySQL
-      MySQLRole: Master
       VPC: "{{ ec2vars_cluster_prefix }}"
 
 # - name: "Create instance: MySQL Slave"

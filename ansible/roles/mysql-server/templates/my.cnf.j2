@@ -188,7 +188,7 @@ general_log                                  = off
 #####################
 slow_query_log_file                          = /var/log/mysql/mysql-slow.log
 slow-query-log                               = {{ mysql_conf.slow_query.enabled }}
-long_query_time                              = {{ mysql_conf.slow_query.enabled }}
+long_query_time                              = {{ mysql_conf.slow_query.long_query_time }}
 log-queries-not-using-indexes                = {{ mysql_conf.slow_query.not_using_indexes }}
 min_examined_row_limit                       = 10000 # don't log queries not using indexes if examining less than this amount of rows
 # log_throttle_queries_not_using_indexes     = 0 # 5.6 introduced throttling if queries exceed number every 60 seconds
