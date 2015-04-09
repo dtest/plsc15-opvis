@@ -20,6 +20,7 @@ max_allowed_packet      = 32M
 #table_cache=4048
 #thread_cache_size   = 4096
 #thread_stack        = 256K
+#slow_launch_time    = 2
 #wait_timeout        = 120
 #read_only = 1
 
@@ -186,10 +187,9 @@ general_log                                  = off
 #Slow Log
 #####################
 slow_query_log_file                          = /var/log/mysql/mysql-slow.log
-slow-query-log                               = 1
-slow_launch_time                             = 2
-long_query_time                              = 1
-log-queries-not-using-indexes                = 1
+slow-query-log                               = {{ mysql_conf.slow_query.enabled }}
+long_query_time                              = {{ mysql_conf.slow_query.enabled }}
+log-queries-not-using-indexes                = {{ mysql_conf.slow_query.not_using_indexes }}
 min_examined_row_limit                       = 10000 # don't log queries not using indexes if examining less than this amount of rows
 # log_throttle_queries_not_using_indexes     = 0 # 5.6 introduced throttling if queries exceed number every 60 seconds
 

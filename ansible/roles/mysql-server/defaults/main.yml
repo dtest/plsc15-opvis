@@ -39,3 +39,6 @@ performance_schema_options:
     - events_statements_current
     - events_statements_history
     - events_statements_history_long
+    - events_stages_current
+    - events_stages_history
+    - events_stages_history_long
