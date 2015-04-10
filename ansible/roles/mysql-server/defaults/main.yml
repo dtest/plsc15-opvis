@@ -19,13 +19,12 @@ mysql_dirs:
   - /etc/mysql
   - "{{ mysql_conf['datadir'] }}"
   - "{{ mysql_conf['logdir'] }}"
-  - "{{ mysql_conf['tmpdir'] }}"
 
 # Used to configure templates/my.cnf.j2
 mysql_conf:
   basedir: "/usr"
   datadir: "/var/lib/mysql"
-  tmpdir: "/tmp/mysql"
+  tmpdir: "/tmp"
   logdir: "/var/lib/mysql"
   socket: "/var/lib/mysql/mysql.sock"
   pidfile: "/var/lib/mysql/mysqld.pid"
@@ -46,3 +45,8 @@ performance_schema_options:
     - events_stages_current
     - events_stages_history
     - events_stages_history_long
+    - events_waits_current
+    - events_waits_history
+    - events_waits_history_long
+  instruments:
+    - "%"

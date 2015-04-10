@@ -198,11 +198,18 @@ min_examined_row_limit                       = 10000 # don't log queries not usi
 # Performance schema
 ####################
 performance_schema=ON
-{% if performance_schema_options['consumers']|length>0 %}
-{% for consumer in performance_schema_options['consumers'] %}
+{% if performance_schema_options.instruments|length>0 %}
+{% for instrument in performance_schema_options.instruments %}
+performance_schema_instrument='{{ instrument }}=ON'
+{% endfor %}
+{% endif %}
+
+{% if performance_schema_options.consumers|length>0 %}
+{% for consumer in performance_schema_options.consumers %}
 performance_schema_consumer_{{ consumer }}=ON
 {% endfor %}
 {% endif %}
+
 {% endif %}
 
 {% if galera_options is defined %}
