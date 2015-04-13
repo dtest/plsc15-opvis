@@ -54,6 +54,15 @@ To run, type the following from inside the plsc15-opvis directory:
 $ ./setup.sh
 ```
 
+# Log in to the instances
+
+To log in to the instances, use the plsc15.pem keypair and ubuntu user:
+
+```bash
+$ ssh -i ~/.ssh/plsc15.pem ubuntu@$IP
+$ sudo su -
+```
+
 # Notices
 
 ### BOTO Profiles
