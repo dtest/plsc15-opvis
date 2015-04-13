@@ -70,7 +70,7 @@
     wait_timeout: 300
     count_tag:
       Name: plsc15-mysql
-    exact_count: 10
+    exact_count: {{ ec2_num_instances }}
     monitoring: no
     assign_public_ip: yes
     instance_tags:

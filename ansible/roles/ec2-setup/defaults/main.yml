@@ -1,6 +1,8 @@
 ---
 ec2_cache_age: 300
 
+ec2_num_instances: 1
+
 ec2vars_cluster_prefix: PLSC15
 ec2vars_region: us-west-1
 ec2vars_az: us-west-1a
