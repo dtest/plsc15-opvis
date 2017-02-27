@@ -4,8 +4,8 @@
 - name: Create group
   group: state=present name="{{ mysql_group }}"
 
-- name: Create system user and group
-  user: state=present name="{{ mysql_user }}" group="{{ mysql_group }}" uid=4500
+- name: Create system user
+  user: state=present name="{{ mysql_user }}" group="{{ mysql_group }}" shell=/bin/false
 
 - name: "Increasing soft file limits for user mysql"
   lineinfile: dest=/etc/security/limits.conf regexp="{{ mysql_user }}\s+soft\s+nofile.*" line="{{ mysql_user }}        soft    nofile  {{ nofile_soft_limits }}"
